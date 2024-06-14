@@ -55,19 +55,6 @@ def mod_inv(a: int, n: int) -> int:
         return x % n
 
 
-# Non-modular exponentiation
-def fast_exp_non_modular(a: int, b: int) -> int:
-    if b == 0:
-        return 1
-    elif b == 1:
-        return a
-    elif b % 2 == 0:
-        half = fast_exp_non_modular(a, b // 2)
-        return half * half
-    else:
-        return a * fast_exp_non_modular(a, b - 1)
-
-
 # Part 9
 def pow(a, b, m):
     result = 1
