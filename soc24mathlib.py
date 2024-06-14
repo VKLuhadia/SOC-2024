@@ -86,7 +86,7 @@ def crt(a: list[int], b: list[int]) -> int:
 def is_quadratic_residue_prime(a: int, p: int) -> int:
     if not are_relatively_prime(a, p):
         return 0
-    if pow(a, (p - 1) // 2, p) == 1 and a < p:
+    if pow(a, (p - 1) // 2, p) == 1:
         return 1
     else:
         return -1
@@ -96,7 +96,7 @@ def is_quadratic_residue_prime(a: int, p: int) -> int:
 def is_quadratic_residue_prime_power(a: int, p: int, e: int) -> int:
     if not are_relatively_prime(a, p):
         return 0
-    elif is_quadratic_residue_prime(a%p, p) == 1  and a < p ** e:
+    elif is_quadratic_residue_prime(a%p, p) == 1:
         return 1
     else:
         return -1
