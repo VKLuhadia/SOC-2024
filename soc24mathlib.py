@@ -98,5 +98,5 @@ def is_quadratic_residue_prime_power(a: int, p: int, e: int) -> int:
         return 0
     elif is_quadratic_residue_prime(a%p, p) == 1  and a < p ** e:
         return 1
-    elif is_quadratic_residue_prime(a%p, p) == -1:
+    else:
         return -1
