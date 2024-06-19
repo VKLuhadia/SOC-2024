@@ -1,6 +1,6 @@
 # SOC-2024
 Project ID 98: Algorithmic Number Theory and Algebra
-Mentor: Nilabha Saha (Github ID: @Nilabha13
+Mentor: Nilabha Saha (Github ID: @Nilabha13)
 This repository comprises of soc24mathlib.py, a python file comprising of various functions related to Number Theory and Algebra.
 1. pair_gcd(a: int, b: int) -> int : Returns the GCD of a and b [Hint: Euclidean Algorithm]
 2. pair_egcd(a: int, b: int) -> tuple[int, int, int] : Returns (x,y,d) where d is the GCD of a and b, and x and y are integers such that ax+by=d
