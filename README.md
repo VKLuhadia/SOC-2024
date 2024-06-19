@@ -1,6 +1,8 @@
 # SOC-2024
 Project ID 98: Algorithmic Number Theory and Algebra
+
 Mentor: Nilabha Saha (Github ID: @Nilabha13)
+
 This repository comprises of soc24mathlib.py, a python file comprising of various functions related to Number Theory and Algebra.
 1. pair_gcd(a: int, b: int) -> int : Returns the GCD of a and b [Hint: Euclidean Algorithm]
 2. pair_egcd(a: int, b: int) -> tuple[int, int, int] : Returns (x,y,d) where d is the GCD of a and b, and x and y are integers such that ax+by=d
@@ -13,5 +15,6 @@ This repository comprises of soc24mathlib.py, a python file comprising of variou
 9. The Python function pow(a,m,n) compute a^m (mod n) very fast using a method called fast exponentiation. Read about how it is done. This method is often also referred to as the double-and-add algorithm (you don't have to implement anything wrt to this now, but you might have to in a different assignment). Feel free to make use of the pow(a,m,n) function in your scripts.
 10. is_quadratic_residue_prime(a: int, p: int) -> int: Return 1 if a is a quadratic residue modulo p, return -1 if a is a quadratic non-residue modulo p, return 0 if a is not coprime to p [Assume p is prime]
 11. is_quadratic_residue_prime_power(a: int, p: int, e: int) -> int: Return 1 if a is a quadratic residue modulo p^e, return -1 if a is a quadratic non-residue modulo p^e, return 0 if a is not coprime to p^e [Assume p is prime and e >= 1]
+
 References used:
 A Computational Introduction to Number Theory and Algebra by Victor Shoup
