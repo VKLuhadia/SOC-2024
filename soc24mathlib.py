@@ -257,7 +257,7 @@ def euler_phi(n: int) -> int:
 
 class QuotientPolynomialRing:
     def __init__(self, poly: list[int], pi_gen: list[int]) -> None:
-        if not pi_gen:
+        if not pi_gen or pi_gen[-1] != 1:
             raise ValueError("Quotienting polynomial must be monic (leading coefficient must be 1)")
 
         self.element = poly
@@ -288,10 +288,11 @@ class QuotientPolynomialRing:
 
     @staticmethod
     def mul_mod(poly1, poly2, mod_poly):
-        result = [0] * (len(poly1) + len(poly2) - 1)
+        result = [0] * (len(mod_poly) - 1)
         for i in range(len(poly1)):
             for j in range(len(poly2)):
-                result[i + j] += poly1[i] * poly2[j]
+                if i + j < len(result):
+                    result[i + j] += poly1[i] * poly2[j]
         return QuotientPolynomialRing.reduce(result, mod_poly)
 
     @staticmethod
@@ -377,7 +378,6 @@ class QuotientPolynomialRing:
             QuotientPolynomialRing.mul_mod(poly1.element, poly2.element, poly1.pi_generator),
             poly1.pi_generator
         )
-
     @staticmethod
     def GCD(poly1, poly2):
         if poly1.pi_generator != poly2.pi_generator:
