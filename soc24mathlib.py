@@ -287,13 +287,12 @@ class QuotientPolynomialRing:
         return QuotientPolynomialRing.reduce(result, mod_poly)
 
     @staticmethod
-    def mul_mod(poly1, poly2, mod_poly):
-        result = [0] * (len(mod_poly) - 1)
-        for i in range(len(poly1)):
-            for j in range(len(poly2)):
-                if i + j < len(result):
-                    result[i + j] += poly1[i] * poly2[j]
-        return QuotientPolynomialRing.reduce(result, mod_poly)
+    def _polymul(a, b):
+        result = [0] * (len(a) + len(b) - 1)
+        for i in range(len(a)):
+            for j in range(len(b)):
+                result[i + j] += a[i] * b[j]
+        return result
 
     @staticmethod
     def mod(poly1, poly2):
@@ -335,6 +334,15 @@ class QuotientPolynomialRing:
         return poly
 
     @staticmethod
+    def _modulus(poly, mod):
+        while len(poly) >= len(mod):
+            if poly[-1] != 0:
+                for i in range(len(mod)):
+                    poly[len(poly) - len(mod) + i] -= poly[-1] * mod[i]
+            poly.pop()
+        return poly
+
+    @staticmethod
     def divmod(poly1, poly2):
         if not poly2:
             raise ValueError("Division by zero polynomial")
@@ -351,6 +359,24 @@ class QuotientPolynomialRing:
             if any(r):
                 r.pop()
         return q, r
+
+    @staticmethod
+    def _empty(poly):
+        return all(coef == 0 for coef in poly)
+
+    @staticmethod
+    def _polygcd(a, b):
+        d = len(a)
+        while (not QuotientPolynomialRing._empty(b)):
+            r = QuotientPolynomialRing._modulus(a, b)
+            a = b
+            b = r
+            if (b == [0]):
+                break
+            QuotientPolynomialRing._modulus(a, b)
+        for _ in range(len(a) - 1, d - 1):
+            a.append(0)
+        return a
 
     @staticmethod
     def Add(poly1, poly2):
@@ -374,19 +400,17 @@ class QuotientPolynomialRing:
     def Mul(poly1, poly2):
         if poly1.pi_generator != poly2.pi_generator:
             raise ValueError("Polynomials must have the same quotienting polynomial")
-        return QuotientPolynomialRing(
-            QuotientPolynomialRing.mul_mod(poly1.element, poly2.element, poly1.pi_generator),
-            poly1.pi_generator
-        )
-        
+        result = QuotientPolynomialRing._polymul(poly1.element, poly2.element)
+        result = QuotientPolynomialRing._modulus(result, poly1.pi_generator)
+        return QuotientPolynomialRing(result, poly1.pi_generator)
+
     @staticmethod
     def GCD(poly1, poly2):
         if poly1.pi_generator != poly2.pi_generator:
             raise ValueError("Polynomials must have the same quotienting polynomial")
-        return QuotientPolynomialRing(
-            QuotientPolynomialRing.gcd(poly1.element, poly2.element),
-            poly1.pi_generator
-        )
+        result = QuotientPolynomialRing._polygcd(poly1.element, poly2.element)
+        result = QuotientPolynomialRing._modulus(result, poly1.pi_generator)
+        return QuotientPolynomialRing(result, poly1.pi_generator)
 
     @staticmethod
     def Inv(poly):
