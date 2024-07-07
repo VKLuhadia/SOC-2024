@@ -378,6 +378,7 @@ class QuotientPolynomialRing:
             QuotientPolynomialRing.mul_mod(poly1.element, poly2.element, poly1.pi_generator),
             poly1.pi_generator
         )
+        
     @staticmethod
     def GCD(poly1, poly2):
         if poly1.pi_generator != poly2.pi_generator:
