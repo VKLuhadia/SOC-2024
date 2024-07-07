@@ -1,3 +1,6 @@
+import random
+# Assignment 1
+
 # Part 1
 def pair_gcd(a: int, b: int) -> int:
     if a == 0:
@@ -100,3 +103,314 @@ def is_quadratic_residue_prime_power(a: int, p: int, e: int) -> int:
         return 1
     else:
         return -1
+
+
+# Assignment 2
+
+# Part 1
+def floor_sqrt(x: int) -> int:
+    if x == 0 or x == 1:
+        return x
+    start, end = 0, x
+    result = 0
+    while start <= end:
+        mid = (start + end) // 2
+        mid_squared = mid * mid
+        if mid_squared == x:
+            return mid
+        elif mid_squared < x:
+            start = mid + 1
+            result = mid
+        else:
+            end = mid - 1
+    return result
+
+
+# Part 2
+def is_perfect_power(x: int) -> bool:
+    def integer_log2(x: int) -> int:
+        result = 0
+        while x > 1:
+            x //= 2
+            result += 1
+        return result
+
+    def integer_root(x: int, b: int) -> int:
+        low, high = 1, x
+        while low < high:
+            mid = (low + high + 1) // 2
+            if mid ** b > x:
+                high = mid - 1
+            else:
+                low = mid
+        return low
+
+    if x <= 1:
+        return False
+
+    max_b = integer_log2(x)
+
+    for b in range(2, max_b + 1):
+        a = integer_root(x, b)
+        if a ** b == x:
+            return True
+
+    return False
+
+
+# Part 3
+def is_prime(n: int) -> bool:
+    def miller_rabin_test(d: int, n: int, a: int) -> bool:
+        x = pow(a, d, n)
+        if x == 1 or x == n - 1:
+            return True
+        while d != n - 1:
+            x = (x * x) % n
+            d *= 2
+            if x == 1:
+                return False
+            if x == n - 1:
+                return True
+        return False
+
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0:
+        return False
+
+    d = n - 1
+    while d % 2 == 0:
+        d //= 2
+
+    bases = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
+
+    for a in bases:
+        if a >= n:
+            break
+        if not miller_rabin_test(d, n, a):
+            return False
+
+    return True
+
+
+# Part 5
+def gen_k_bit_prime(k: int) -> int:
+    if k < 1:
+        raise ValueError("k must be >= 1")
+
+    while True:
+        candidate = random.randint(2**(k-1), 2**k - 1)
+        if is_prime(candidate):
+            return candidate
+
+
+# Part 4
+def gen_prime(m: int) -> int:
+    if m <= 2:
+        raise ValueError("m must be greater than 2")
+
+    while True:
+        candidate = random.randint(2, m)
+        if is_prime(candidate):
+            return candidate
+
+
+# Part 6
+def factor(n: int) -> list[tuple[int, int]]:
+    if n == 1:
+        return []
+
+    factors = []
+    i = 2
+    while i * i <= n:
+        count = 0
+        while n % i == 0:
+            n //= i
+            count += 1
+        if count > 0:
+            factors.append((i, count))
+        i += 1
+    if n > 1:
+        factors.append((n, 1))
+    return factors
+
+
+# Part 7
+def euler_phi(n: int) -> int:
+    if n <= 0:
+        raise ValueError("n must be greater than 0")
+
+    if n == 1:
+        return 1
+
+    factors = factor(n)
+    result = n
+
+    for (p, _) in factors:
+        result *= (p - 1)
+        result //= p
+
+    return result
+
+
+class QuotientPolynomialRing:
+    def __init__(self, poly: list[int], pi_gen: list[int]) -> None:
+        if not pi_gen:
+            raise ValueError("Quotienting polynomial must be monic (leading coefficient must be 1)")
+
+        self.element = poly
+        self.pi_generator = pi_gen
+        self.degree = len(pi_gen) - 1
+
+    @staticmethod
+    def add_mod(poly1, poly2, mod_poly):
+        max_len = max(len(poly1), len(poly2))
+        result = [0] * max_len
+        for i in range(max_len):
+            if i < len(poly1):
+                result[i] += poly1[i]
+            if i < len(poly2):
+                result[i] += poly2[i]
+        return QuotientPolynomialRing.reduce(result, mod_poly)
+
+    @staticmethod
+    def sub_mod(poly1, poly2, mod_poly):
+        max_len = max(len(poly1), len(poly2))
+        result = [0] * max_len
+        for i in range(max_len):
+            if i < len(poly1):
+                result[i] += poly1[i]
+            if i < len(poly2):
+                result[i] -= poly2[i]
+        return QuotientPolynomialRing.reduce(result, mod_poly)
+
+    @staticmethod
+    def mul_mod(poly1, poly2, mod_poly):
+        result = [0] * (len(poly1) + len(poly2) - 1)
+        for i in range(len(poly1)):
+            for j in range(len(poly2)):
+                result[i + j] += poly1[i] * poly2[j]
+        return QuotientPolynomialRing.reduce(result, mod_poly)
+
+    @staticmethod
+    def mod(poly1, poly2):
+        _, r = QuotientPolynomialRing.divmod(poly1, poly2)
+        return r
+
+    @staticmethod
+    def gcd(poly1, poly2):
+        while poly2 != [0]:
+            poly1, poly2 = poly2, QuotientPolynomialRing.mod(poly1, poly2)
+        return poly1
+
+    @staticmethod
+    def inv_mod(poly, mod_poly):
+        g, x, _ = QuotientPolynomialRing.extended_gcd(poly, mod_poly)
+        if g != [1]:
+            raise ValueError("Polynomial is not invertible in this ring")
+        return QuotientPolynomialRing.reduce(x, mod_poly)
+
+    @staticmethod
+    def extended_gcd(a, b):
+        x0, x1, y0, y1 = [1], [0], [0], [1]
+        while b != [0]:
+            q, r = QuotientPolynomialRing.divmod(a, b)
+            a, b = b, r
+            x0, x1 = x1, QuotientPolynomialRing.sub_mod(x0, QuotientPolynomialRing.mul_mod(q, x1, [1]), [1])
+            y0, y1 = y1, QuotientPolynomialRing.sub_mod(y0, QuotientPolynomialRing.mul_mod(q, y1, [1]), [1])
+        return a, x0, y0
+
+    @staticmethod
+    def reduce(poly, mod_poly):
+        while len(poly) >= len(mod_poly):
+            if poly[-1] != 0:
+                for i in range(len(mod_poly)):
+                    poly[-1 - i] -= mod_poly[-1 - i] * poly[-1]
+            poly.pop()
+        while len(poly) < len(mod_poly) - 1:
+            poly.append(0)
+        return poly
+
+    @staticmethod
+    def divmod(poly1, poly2):
+        if not poly2:
+            raise ValueError("Division by zero polynomial")
+
+        q = [0] * (len(poly1) - len(poly2) + 1)
+        r = poly1[:]
+        while len(r) >= len(poly2) and any(r):
+            if r[-1] != 0:
+                q[len(r) - len(poly2)] = r[-1]
+                for i in range(len(poly2)):
+                    if len(r) - 1 - i < 0:
+                        break
+                    r[len(r) - 1 - i] -= poly2[-1 - i] * q[len(r) - len(poly2)]
+            if any(r):
+                r.pop()
+        return q, r
+
+    @staticmethod
+    def Add(poly1, poly2):
+        if poly1.pi_generator != poly2.pi_generator:
+            raise ValueError("Polynomials must have the same quotienting polynomial")
+        return QuotientPolynomialRing(
+            QuotientPolynomialRing.add_mod(poly1.element, poly2.element, poly1.pi_generator),
+            poly1.pi_generator
+        )
+
+    @staticmethod
+    def Sub(poly1, poly2):
+        if poly1.pi_generator != poly2.pi_generator:
+            raise ValueError("Polynomials must have the same quotienting polynomial")
+        return QuotientPolynomialRing(
+            QuotientPolynomialRing.sub_mod(poly1.element, poly2.element, poly1.pi_generator),
+            poly1.pi_generator
+        )
+
+    @staticmethod
+    def Mul(poly1, poly2):
+        if poly1.pi_generator != poly2.pi_generator:
+            raise ValueError("Polynomials must have the same quotienting polynomial")
+        return QuotientPolynomialRing(
+            QuotientPolynomialRing.mul_mod(poly1.element, poly2.element, poly1.pi_generator),
+            poly1.pi_generator
+        )
+
+    @staticmethod
+    def GCD(poly1, poly2):
+        if poly1.pi_generator != poly2.pi_generator:
+            raise ValueError("Polynomials must have the same quotienting polynomial")
+        return QuotientPolynomialRing(
+            QuotientPolynomialRing.gcd(poly1.element, poly2.element),
+            poly1.pi_generator
+        )
+
+    @staticmethod
+    def Inv(poly):
+        return QuotientPolynomialRing(
+            QuotientPolynomialRing.inv_mod(poly.element, poly.pi_generator),
+            poly.pi_generator
+        )
+
+
+# Part 8
+def aks_test(n: int) -> bool:
+    if n <= 1:
+        return False
+
+    if n <= 3:
+        return True
+
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+
+    i = 5
+
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+
+    return True
