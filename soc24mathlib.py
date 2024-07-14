@@ -2,10 +2,10 @@ import random
 
 
 def pair_gcd(a: int, b: int) -> int:
-    """ 
+    """
     Returns:
-        The Greatest Common Divisor (GCD) using Euclidean Algorithm. 
-    
+        The Greatest Common Divisor (GCD) using Euclidean Algorithm.
+
     Args:
         a (int): A positive integer.
         b (int): A positive integer.
@@ -17,11 +17,11 @@ def pair_gcd(a: int, b: int) -> int:
 
 
 def pair_egcd(a: int, b: int) -> tuple[int, int, int]:
-    """ 
+    """
     Returns:
         (x, y, d) where d is the Greatest Common Divisor (GCD) and x and y are integers such that ax+by=d
         using Extended Euclidean Algorithm.
-    
+
     Args:
         a (int): A positive integer.
         b (int): A positive integer.
@@ -36,9 +36,9 @@ def pair_egcd(a: int, b: int) -> tuple[int, int, int]:
 
 
 def gcd(*args: int) -> int:
-    """ 
+    """
     Returns:
-        The Greatest Common Divisor (GCD) of all positive integers provided using Euclidean Algorithm. 
+        The Greatest Common Divisor (GCD) of all positive integers provided using Euclidean Algorithm.
 
     Args:
         Positive Integers
@@ -50,10 +50,10 @@ def gcd(*args: int) -> int:
 
 
 def pair_lcm(a: int, b: int) -> int:
-    """ 
+    """
     Returns:
         The Least Common Multiple (LCM) by evaluating GCD using Euclidean Algorithm and then dividing a*b by their GCD.
-        
+
     Args:
         a (int): A positive integer.
         b (int): A positive integer.
@@ -62,10 +62,10 @@ def pair_lcm(a: int, b: int) -> int:
 
 
 def lcm(*args: int) -> int:
-    """ 
+    """
     Returns:
-        The Least Common Multiple (LCM) of all positive integers provided using Euclidean Algorithm. 
-    
+        The Least Common Multiple (LCM) of all positive integers provided using Euclidean Algorithm.
+
     Args:
         Positive Integers
     """
@@ -76,10 +76,10 @@ def lcm(*args: int) -> int:
 
 
 def are_relatively_prime(a: int, b: int) -> bool:
-    """ 
+    """
     Returns:
         True if the GCD of two positive integers is iff 1, else returns False.
-        
+
     Args:
         a (int): A positive integer.
         b (int): A positive integer.
@@ -94,10 +94,10 @@ def mod_inv(a: int, n: int) -> int:
     """
     Returns:
         The inverse of a % n.
-    
+
     Raises:
         Exception if a and n are NOT coprime.
-        
+
     Args:
         a (int): A positive integer.
         n (int): A positive integer.
@@ -222,7 +222,7 @@ def is_perfect_power(x: int) -> bool:
         True if n is a perfect power, else False.
 
     Args:
-        m (int): A positive integer > 1.
+        x (int): A positive integer > 1.
     """
 
     def integer_log2(x: int) -> int:
@@ -258,10 +258,10 @@ def is_perfect_power(x: int) -> bool:
 def is_prime(n: int) -> bool:
     """
     Returns:
-        True if n is a prime number, else False.
+        True if n is a prime number, else False, using Miller-Rabin Test, depending on the set of bases chosen.
 
     Args:
-        m (int): A positive integer.
+        n (int): A positive integer.
     """
 
     def miller_rabin_test(d: int, n: int, a: int) -> bool:
@@ -762,6 +762,13 @@ class QuotientPolynomialRing:
 
 
 def aks_test(n: int) -> bool:
+    """
+    Returns:
+        True if n is a prime number, else False, using Agrawal-Kayal-Saxena Test.
+
+    Args:
+        n (int): A positive integer.
+    """
     if n <= 1:
         return False
 
