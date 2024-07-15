@@ -789,8 +789,16 @@ def aks_test(n: int) -> bool:
 
 
 def get_generator(p: int) -> int:
-    """ Returns a generator of (Z_p)^*, assuming p is prime. """
+    """
+    Returns:
+        A generator of (Z_p)^*.
 
+    Raises:
+        Value Error if p is composite.
+
+    Args:
+        p (int): A prime positive integer.
+    """
     if not is_prime(p):
         raise ValueError("p must be a prime number")
 
@@ -805,8 +813,19 @@ def get_generator(p: int) -> int:
 
 
 def discrete_log(x: int, g: int, p: int) -> int:
-    """ Returns the discrete logarithm of x to the base g in (Z_p)^*; assume p is prime. """
+    """
+    Returns:
+        The discrete logarithm to the base g in (Z_p)^*.
 
+    Raises:
+        Value Error if if p is a composite number
+        or x and g are not in the range [1, p-1]
+
+    Args:
+        x (int): A positive integer >= 1 and <= p-1.
+        p (int): A prime positive integer.
+        g (int): A positive integer >= 1 and <= p-1.
+    """
     if not is_prime(p):
         raise ValueError("p must be a prime number")
 
@@ -831,8 +850,17 @@ def discrete_log(x: int, g: int, p: int) -> int:
 
 
 def legendre_symbol(a: int, p: int) -> int:
-    """ Returns the Legendre symbol (a/p); assume p is prime. """
+    """
+    Returns:
+        The Legendre symbol (a/p).
 
+    Raises:
+        Value error if p is a composite number.
+
+    Args:
+        a (int): A positive integer.
+        p (int): A prime positive integer.
+    """
     if not is_prime(p):
         raise ValueError("p must be a prime number")
 
@@ -849,8 +877,17 @@ def legendre_symbol(a: int, p: int) -> int:
 
 
 def jacobi_symbol(a: int, n: int) -> int:
-    """ Returns the Jacobi symbol (a/n); assume n is positive. """
+    """
+    Returns:
+        The Jacobi symbol (a/n).
 
+    Raises:
+        Value error if n is a negative number.
+
+    Args:
+        a (int): A positive integer.
+        n (int): A positive integer.
+    """
     if n <= 0:
         raise ValueError("n must be a positive integer")
 
@@ -875,9 +912,6 @@ def jacobi_symbol(a: int, n: int) -> int:
 
 
 def modular_sqrt_prime(x: int, p: int) -> int:
-    """ Returns the modular square root of x modulo p (where p is prime).
-        Raises an exception if the square root does not exist. """
-
     if p <= 1 or not is_prime(p):
         raise ValueError("p must be a prime number greater than 1")
 
@@ -927,8 +961,14 @@ def modular_sqrt_prime(x: int, p: int) -> int:
 
 
 def is_smooth(m: int, y: int) -> bool:
-    """ Return True if m is y-smooth, False otherwise. """
+    """
+    Returns:
+        True if m is y-smooth, False otherwise.
 
+    Args:
+        m (int): A positive integer.
+        y (int): A positive integer.
+    """
     if m == 1:
         return True
 
@@ -945,11 +985,20 @@ def is_smooth(m: int, y: int) -> bool:
 
 
 def probabilistic_discrete_log(x: int, g: int, p: int) -> int:
-    """ Returns the discrete logarithm of x to the base g in (Z_p)^* using
+    """
+    Returns:
+        The discrete logarithm of x to the base g in (Z_p)^* using
         a subexponential probabilistic algorithm (Baby-step Giant-step).
-        Assumes p is prime and g is a generator of (Z_p)^*.
-        Raises an exception if the discrete logarithm does not exist. """
 
+    Args:
+        x (int): A positive integer >= 1 and <= p-1.
+        p (int): A prime positive integer.
+        g (int): A positive integer >= 1 and <= p-1.
+        Assumes g is a generator of (Z_p)^*.
+
+    Raises:
+        Exception if the discrete logarithm does not exist.
+    """
     if x <= 0 or x >= p or g <= 0 or g >= p or p <= 1 or not is_prime(p):
         raise ValueError("Invalid arguments. x, g should be in (1, p-1), and p should be a prime number")
 
@@ -975,10 +1024,28 @@ def probabilistic_discrete_log(x: int, g: int, p: int) -> int:
 
 
 def pollard_rho_factor(n):
+    """
+    Performs integer factorization using Pollard's Rho algorithm.
+
+    Args:
+        n (int): The integer to be factorized.
+
+    Returns:
+        list[int]: A list of prime factors of the integer n.
+    """
     if n <= 1:
         return []
 
     def rho_factor(n):
+        """
+        Helper function to perform Pollard's Rho algorithm on integer n.
+
+        Args:
+            n (int): The integer to be factorized.
+
+        Returns:
+            int: A non-trivial factor of n.
+        """
         if n % 2 == 0:
             return 2
         x = random.randint(1, n-1)
@@ -1008,6 +1075,16 @@ def pollard_rho_factor(n):
     return factors
 
 def probabilistic_factor(n):
+    """
+    Performs probabilistic factorization of an integer 'n' using Pollard's Rho algorithm
+    and returns the prime factors along with their powers.
+
+    Args:
+        n (int): The integer to be factorized.
+
+    Returns:
+        list[tuple[int, int]]: A list of tuples, each containing a prime factor and its power.
+    """
     factors = pollard_rho_factor(n)
     prime_factors = sorted(set(factors))
     factorization = []
