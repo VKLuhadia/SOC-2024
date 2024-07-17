@@ -155,9 +155,9 @@ def crt(a: list[int], b: list[int]) -> int:
 def is_quadratic_residue_prime(a: int, p: int) -> int:
     """
     Returns:
-        1 if a is a quadratic residue modulo p^e,
-        -1 if a is a quadratic non-residue modulo p^e,
-        0 if a is not coprime to p^e.
+        1 if a is a quadratic residue modulo p,
+        -1 if a is a quadratic non-residue modulo p,
+        0 if a is not coprime to p.
 
     Args:
         a (int): A positive integer.
@@ -391,8 +391,8 @@ def euler_phi(n: int) -> int:
 class QuotientPolynomialRing:
     """
     This class represents elements in a univariate polynomial ring over the integers
-    modulo some specified monic polynomial in the same ring. Polynomials are represented
-    using a list of ints, where the i^th index represents the coefficient of X^i.
+    modulo some specified monic polynomial in the same ring.
+    Polynomials are represented using a list of ints, where the i^th index represents the coefficient of X^i.
     The length of the list is the degree d of the quotienting polynomial.
     """
 
@@ -911,53 +911,96 @@ def jacobi_symbol(a: int, n: int) -> int:
         return 0
 
 
-def modular_sqrt_prime(x: int, p: int) -> int:
-    if p <= 1 or not is_prime(p):
-        raise ValueError("p must be a prime number greater than 1")
+def modular_sqrt_prime(n: int, p: int) -> int:
+    """
+    Compute the modular square root of n modulo a prime p using the Tonelli-Shanks algorithm.
 
-    x = x % p
+    Args:
+        n (int): The number to find the square root of.
+        p (int): The prime modulus.
 
-    if x == 0:
-        return 0
+    Returns:
+        int: The modular square root of n modulo p if it exists, otherwise None.
 
-    if p == 2:
-        return x
-
-    if legendre_symbol(x, p) != 1:
-        raise ValueError(f"x={x} is not a quadratic residue modulo p={p}")
-
-    if p % 4 == 3:
-        sqrt_x = pow(x, (p + 1) // 4, p)
-        return sqrt_x
+    Raises:
+        ValueError: If n is not a quadratic residue modulo p.
+    """
+    if legendre_symbol(n, p) != 1:
+        return None
 
     q, s = p - 1, 0
     while q % 2 == 0:
         q //= 2
         s += 1
-
     z = 2
+
     while legendre_symbol(z, p) != -1:
         z += 1
 
-    m = s
-    c = pow(z, q, p)
-    t = pow(x, q, p)
-    r = pow(x, (q + 1) // 2, p)
-
+    m, c, t, r = s, pow(z, q, p), pow(n, q, p), pow(n, (q + 1) // 2, p)
     while t != 0 and t != 1:
-        t2i = t
-        i = 0
+        t2i, i = t, 0
         while t2i != 1:
-            t2i = (t2i * t2i) % p
+            t2i = pow(t2i, 2, p)
             i += 1
-
-        b = pow(c, 1 << (m - i - 1), p)
+        b = pow(c, 2**(m - i - 1), p)
         m = i
-        c = (b * b) % p
+        c = pow(b, 2, p)
         t = (t * c) % p
         r = (r * b) % p
 
-    return r
+    return min(r, p - r)
+
+
+def hensel_lift(n, p, k):
+    """
+    Hensel's Lifting Lemma for lifting solutions from modulo p^k to modulo p^(k+1).
+
+    Args:
+        f: Function representing the polynomial equation f(x) ≡ 0 (mod p^k)
+        f_prime: Function representing the derivative of f(x)
+        x_mod_p: Initial solution modulo p
+        p: Prime number
+        k: Current power of p
+
+    Returns:
+        x_mod_p^(k+1): Solution modulo p^(k+1)
+    """
+    x_mod_p = modular_sqrt_prime(n, p)
+
+    f_x_mod_p = (x_mod_p * x_mod_p) % (p**k)
+
+    f_prime_x_mod_p = (2 * x_mod_p) % (p**k)
+
+    u = (-f_x_mod_p * pow(f_prime_x_mod_p, -1, p**k)) % (p**k)
+
+    x_mod_p_k_plus_1 = x_mod_p + u * p**k
+
+    return x_mod_p_k_plus_1
+
+
+def modular_sqrt_prime_power(n, p, k):
+    """
+    Hensel's Lifting Lemma for lifting solutions from modulo p to modulo p^k.
+
+    Args:
+        f: Function representing the polynomial equation f(x) ≡ 0 (mod p)
+        f_prime: Function representing the derivative of f(x)
+        x_mod_p: Initial solution modulo p
+        p: Prime number
+        k: Desired power of p
+
+    Returns:
+        x_mod_p^k: Solution modulo p^k
+    """
+    current_x_mod_p = modular_sqrt_prime(n, p)
+    current_p_power = 1
+
+    for current_k in range(1, k):
+        current_x_mod_p = hensel_lift(current_x_mod_p, p, current_p_power)
+        current_p_power *= p
+
+    return current_x_mod_p
 
 
 def is_smooth(m: int, y: int) -> bool:
@@ -984,7 +1027,7 @@ def is_smooth(m: int, y: int) -> bool:
     return True
 
 
-def probabilistic_discrete_log(x: int, g: int, p: int) -> int:
+def probabilistic_dlog(x: int, g: int, p: int) -> int:
     """
     Returns:
         The discrete logarithm of x to the base g in (Z_p)^* using
