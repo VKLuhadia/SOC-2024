@@ -3,12 +3,14 @@ import random
 
 def pair_gcd(a: int, b: int) -> int:
     """
-    Returns:
-        The Greatest Common Divisor (GCD) using Euclidean Algorithm.
+    Calculates the Greatest Common Divisor (GCD) of two positive integers using Euclidean Algorithm.
 
     Args:
         a (int): A positive integer.
         b (int): A positive integer.
+
+    Returns:
+        int: The GCD of a and b.
     """
     if a == 0:
         return b
@@ -18,13 +20,15 @@ def pair_gcd(a: int, b: int) -> int:
 
 def pair_egcd(a: int, b: int) -> tuple[int, int, int]:
     """
-    Returns:
-        (x, y, d) where d is the Greatest Common Divisor (GCD) and x and y are integers such that ax+by=d
-        using Extended Euclidean Algorithm.
+    Calculates (x, y, d) where d is the Greatest Common Divisor (GCD) of two positive integers and
+    x and y are integers such that ax+by=d using Extended Euclidean Algorithm.
 
     Args:
         a (int): A positive integer.
         b (int): A positive integer.
+
+    Returns:
+        tuple[int, int, int]: (x, y, d) where d is the GCD of a and b, and x and y are integers such that ax+by=d.
     """
     if a == 0:
         return (0, 1, b)
@@ -37,11 +41,13 @@ def pair_egcd(a: int, b: int) -> tuple[int, int, int]:
 
 def gcd(*args: int) -> int:
     """
-    Returns:
-        The Greatest Common Divisor (GCD) of all positive integers provided using Euclidean Algorithm.
+    Calculates the Greatest Common Divisor (GCD) of multiple positive integers using Euclidean Algorithm.
 
     Args:
-        Positive Integers
+        *args: Multiple positive integers.
+
+    Returns:
+        int: The GCD of all positive intgers entered.
     """
     current_gcd = args[0]
     for num in args[1:]:
@@ -51,23 +57,28 @@ def gcd(*args: int) -> int:
 
 def pair_lcm(a: int, b: int) -> int:
     """
-    Returns:
-        The Least Common Multiple (LCM) by evaluating GCD using Euclidean Algorithm and then dividing a*b by their GCD.
+    Calculates the Least Common Multiple (LCM) of two positive integers by
+    evaluating their GCD using Euclidean Algorithm and then dividing their product by their GCD.
 
     Args:
         a (int): A positive integer.
         b (int): A positive integer.
+
+    Returns:
+        int: The LCM of a and b.
     """
     return a * b // pair_gcd(a, b)
 
 
 def lcm(*args: int) -> int:
     """
-    Returns:
-        The Least Common Multiple (LCM) of all positive integers provided using Euclidean Algorithm.
+    Calculates the Least Common Multiple (LCM) of multiple positive integers using Euclidean Algorithm.
 
     Args:
-        Positive Integers
+        *args: Multiple positive integers.
+
+    Returns:
+        int: The LCM of all positive integers entered.
     """
     current_lcm = args[0]
     for num in args[1:]:
@@ -77,12 +88,14 @@ def lcm(*args: int) -> int:
 
 def are_relatively_prime(a: int, b: int) -> bool:
     """
-    Returns:
-        True if the GCD of two positive integers is iff 1, else returns False.
+    Finds out whether two positive integers are relatively prime or not.
 
     Args:
         a (int): A positive integer.
         b (int): A positive integer.
+
+    Returns:
+        bool: True if the GCD of a and b is iff 1, else returns False.
     """
     if pair_gcd(a, b) == 1:
         return True
@@ -92,15 +105,17 @@ def are_relatively_prime(a: int, b: int) -> bool:
 
 def mod_inv(a: int, n: int) -> int:
     """
-    Returns:
-        The inverse of a % n.
-
-    Raises:
-        Exception if a and n are NOT coprime.
+    Calculares the solution of inverse of a (mod n).
 
     Args:
         a (int): A positive integer.
         n (int): A positive integer.
+
+    Raises:
+        Exception if a and n are NOT coprime.
+
+    Returns:
+        int: Mod inverse of a (mod n).
     """
     x, y, gcd = pair_egcd(a, n)
     if gcd != 1:
@@ -111,13 +126,15 @@ def mod_inv(a: int, n: int) -> int:
 
 def pow(a: int, b: int, m: int) -> int:
     """
-    Returns:
-        (a ^ b) % m using Fast Exponentiation Method or Double-and-Add Algorithm.
+    Calculates (a ^ b) % m using Fast Exponentiation Method or Double-and-Add Algorithm.
 
     Args:
         a (int): A positive integer.
         b (int): A positive integer.
         m (int): A positive integer.
+
+    Returns:
+        int: (a ^ b) % m.
     """
     result = 1
     a = a % m
@@ -131,13 +148,15 @@ def pow(a: int, b: int, m: int) -> int:
 
 def crt(a: list[int], b: list[int]) -> int:
     """
-    Returns:
-        Unique value of a % (product of all n[i]) such that a = a[i] % n[i].
+    Applies Chinese Remainder Theorem.
 
     Args:
         a (list[int]): A list of positive integers.
         n (list[int]): A list of positive integers.
         Assume all the n[i] are pairwise coprime and that the length of the two lists are the same and is nonzero.
+
+    Returns:
+        int: Unique value of a % (product of all n[i]) such that a = a[i] % n[i].
     """
     if len(a) != len(b):
         raise ValueError("Both lists must have the same length")
@@ -154,14 +173,16 @@ def crt(a: list[int], b: list[int]) -> int:
 
 def is_quadratic_residue_prime(a: int, p: int) -> int:
     """
-    Returns:
-        1 if a is a quadratic residue modulo p,
-        -1 if a is a quadratic non-residue modulo p,
-        0 if a is not coprime to p.
+    Finds out whether a is quadratic residue modulo p or not.
 
     Args:
         a (int): A positive integer.
         p (int): A prime positive integer.
+
+    Returns:
+        1 if a is a quadratic residue modulo p,
+        -1 if a is a quadratic non-residue modulo p,
+        0 if a is not coprime to p.
     """
     if not are_relatively_prime(a, p):
         return 0
@@ -173,15 +194,17 @@ def is_quadratic_residue_prime(a: int, p: int) -> int:
 
 def is_quadratic_residue_prime_power(a: int, p: int, e: int) -> int:
     """
-    Returns:
-        1 if a is a quadratic residue modulo p^e,
-        -1 if a is a quadratic non-residue modulo p^e,
-        0 if a is not coprime to p^e.
+    Finds out whether a is quadratic residue modulo p^e or not.
 
     Args:
         a (int): A positive integer.
         p (int): A prime positive integer.
         e (int): A positive integer.
+
+    Returns:
+        1 if a is a quadratic residue modulo p^e,
+        -1 if a is a quadratic non-residue modulo p^e,
+        0 if a is not coprime to p^e.
     """
     if not are_relatively_prime(a, p):
         return 0
@@ -193,11 +216,13 @@ def is_quadratic_residue_prime_power(a: int, p: int, e: int) -> int:
 
 def floor_sqrt(x: int) -> int:
     """
-    Returns:
-        Floor of the square root of x.
+    Compute the floor of the square root of a positive integer x.
 
     Args:
         x (int): A positive integer.
+
+    Returns:
+        int: The largest integer y such that y*y <= x.
     """
     if x == 0 or x == 1:
         return x
@@ -218,11 +243,13 @@ def floor_sqrt(x: int) -> int:
 
 def is_perfect_power(x: int) -> bool:
     """
-    Returns:
-        True if n is a perfect power, else False.
+    Determine if a given integer is a perfect power.
 
     Args:
-        x (int): A positive integer > 1.
+        x (int): A positive integer greater than 1.
+
+    Returns:
+        bool: True if x is a perfect power, else False.
     """
 
     def integer_log2(x: int) -> int:
@@ -257,11 +284,13 @@ def is_perfect_power(x: int) -> bool:
 
 def is_prime(n: int) -> bool:
     """
-    Returns:
-        True if n is a prime number, else False, using Miller-Rabin Test, depending on the set of bases chosen.
+    Check if a given integer is a prime number using the Miller-Rabin primality test.
 
     Args:
         n (int): A positive integer.
+
+    Returns:
+        bool: True if n is a prime number, else False.
     """
 
     def miller_rabin_test(d: int, n: int, a: int) -> bool:
@@ -301,11 +330,16 @@ def is_prime(n: int) -> bool:
 
 def gen_k_bit_prime(k: int) -> int:
     """
-    Returns:
-        A random k-bit prime number p, that is, a prime number p such that 2^(k-1) <= p < 2^k.
+    Generate a random k-bit prime number.
 
     Args:
-        k (int): A positive integer.
+        k (int): A positive integer representing the number of bits.
+
+    Returns:
+        int: A k-bit prime number p such that 2^(k-1) <= p < 2^k.
+
+    Raises:
+        ValueError: If k is less than 1.
     """
     if k < 1:
         raise ValueError("k must be >= 1")
@@ -318,11 +352,16 @@ def gen_k_bit_prime(k: int) -> int:
 
 def gen_prime(m: int) -> int:
     """
-    Returns:
-        A random prime number p, that is, a prime number p such that 2 <= p < m.
+    Generate a random prime number less than a given integer m.
 
     Args:
-        m (int): A positive integer >= 2.
+        m (int): A positive integer greater than or equal to 2.
+
+    Returns:
+        int: A random prime number p such that 2 <= p < m.
+
+    Raises:
+        ValueError: If m is less than or equal to 2.
     """
     if m <= 2:
         raise ValueError("m must be greater than 2")
@@ -335,15 +374,15 @@ def gen_prime(m: int) -> int:
 
 def factor(n: int) -> list[tuple[int, int]]:
     """
-    Returns:
-        The prime factorisation of n.
-        This should return a list of tuple,
-        where the first component of the tuples are the prime factors,
-        and the second component of the tuple is
-        the respective power to which the corresponding factor is raised in the prime factorisation.
+    Compute the prime factorization of a given integer.
 
     Args:
         n (int): A positive integer.
+
+    Returns:
+        list[tuple[int, int]]:
+        A list of tuples where the first element is a prime factor
+        and the second element is its power in the prime factorization.
     """
     if n == 1:
         return []
@@ -365,12 +404,16 @@ def factor(n: int) -> list[tuple[int, int]]:
 
 def euler_phi(n: int) -> int:
     """
-    Returns:
-        The Euler phi Function or Totient Function of n.
-        Euler's Totient function represents the number of integers less than n and coprime with n.
+    Compute the Euler's Totient function of a given integer.
 
     Args:
         n (int): A positive integer.
+
+    Returns:
+        int: The number of integers less than n that are coprime with n.
+
+    Raises:
+        ValueError: If n is less than or equal to 0.
     """
     if n <= 0:
         raise ValueError("n must be greater than 0")
@@ -763,11 +806,13 @@ class QuotientPolynomialRing:
 
 def aks_test(n: int) -> bool:
     """
-    Returns:
-        True if n is a prime number, else False, using Agrawal-Kayal-Saxena Test.
+    Determine if a number is prime using the Agrawal-Kayal-Saxena (AKS) Test.
 
     Args:
         n (int): A positive integer.
+
+    Returns:
+        bool: True if n is a prime number, else False.
     """
     if n <= 1:
         return False
@@ -790,14 +835,16 @@ def aks_test(n: int) -> bool:
 
 def get_generator(p: int) -> int:
     """
-    Returns:
-        A generator of (Z_p)^*.
-
-    Raises:
-        Value Error if p is composite.
+    Find a generator of the multiplicative group of integers modulo p.
 
     Args:
         p (int): A prime positive integer.
+
+    Returns:
+        int: A generator of the multiplicative group (Z_p)^*.
+
+    Raises:
+        ValueError: If p is composite.
     """
     if not is_prime(p):
         raise ValueError("p must be a prime number")
@@ -814,17 +861,19 @@ def get_generator(p: int) -> int:
 
 def discrete_log(x: int, g: int, p: int) -> int:
     """
-    Returns:
-        The discrete logarithm to the base g in (Z_p)^*.
-
-    Raises:
-        Value Error if if p is a composite number
-        or x and g are not in the range [1, p-1]
+    Compute the discrete logarithm of x to the base g modulo p.
 
     Args:
         x (int): A positive integer >= 1 and <= p-1.
-        p (int): A prime positive integer.
         g (int): A positive integer >= 1 and <= p-1.
+        p (int): A prime positive integer.
+
+    Returns:
+        int: The discrete logarithm of x to the base g in (Z_p)^*.
+
+    Raises:
+        ValueError: If p is composite, or x and g are not in the range [1, p-1].
+        ValueError: If the discrete logarithm does not exist.
     """
     if not is_prime(p):
         raise ValueError("p must be a prime number")
@@ -851,15 +900,17 @@ def discrete_log(x: int, g: int, p: int) -> int:
 
 def legendre_symbol(a: int, p: int) -> int:
     """
-    Returns:
-        The Legendre symbol (a/p).
-
-    Raises:
-        Value error if p is a composite number.
+    Compute the Legendre symbol (a/p).
 
     Args:
         a (int): A positive integer.
         p (int): A prime positive integer.
+
+    Returns:
+        int: The Legendre symbol (a/p).
+
+    Raises:
+        ValueError: If p is composite.
     """
     if not is_prime(p):
         raise ValueError("p must be a prime number")
@@ -878,15 +929,17 @@ def legendre_symbol(a: int, p: int) -> int:
 
 def jacobi_symbol(a: int, n: int) -> int:
     """
-    Returns:
-        The Jacobi symbol (a/n).
-
-    Raises:
-        Value error if n is a negative number.
+    Compute the Jacobi symbol (a/n).
 
     Args:
         a (int): A positive integer.
         n (int): A positive integer.
+
+    Returns:
+        int: The Jacobi symbol (a/n).
+
+    Raises:
+        ValueError: If n is a negative number.
     """
     if n <= 0:
         raise ValueError("n must be a positive integer")
@@ -952,65 +1005,73 @@ def modular_sqrt_prime(n: int, p: int) -> int:
     return min(r, p - r)
 
 
-def hensel_lift(n, p, k):
+def modular_sqrt_prime_power(x: int, p: int, e: int) -> int:
     """
-    Hensel's Lifting Lemma for lifting solutions from modulo p^k to modulo p^(k+1).
+    Compute the modular square root of x modulo p^e where p is prime and e is the exponent.
 
     Args:
-        f: Function representing the polynomial equation f(x) ≡ 0 (mod p^k)
-        f_prime: Function representing the derivative of f(x)
-        x_mod_p: Initial solution modulo p
-        p: Prime number
-        k: Current power of p
+        x (int): The number to find the square root of.
+        p (int): The prime modulus.
+        e (int): The exponent of the prime modulus.
 
     Returns:
-        x_mod_p^(k+1): Solution modulo p^(k+1)
+        int: The modular square root of x modulo p^e if it exists, otherwise None.
     """
-    x_mod_p = modular_sqrt_prime(n, p)
+    if e == 1:
+        return modular_sqrt_prime(x, p)
+    y = modular_sqrt_prime(x, p)
+    if y is None:
+        return None
+    pe = p
+    for k in range(1, e):
+        r = (x - y * y) // pe
+        r = (r * pow(2 * y, -1, p)) % p
+        y = (y + r * pe) % (pe * p)
+        pe *= p
+        k += 1
+    return min(y, p ** e - y)
 
-    f_x_mod_p = (x_mod_p * x_mod_p) % (p**k)
 
-    f_prime_x_mod_p = (2 * x_mod_p) % (p**k)
-
-    u = (-f_x_mod_p * pow(f_prime_x_mod_p, -1, p**k)) % (p**k)
-
-    x_mod_p_k_plus_1 = x_mod_p + u * p**k
-
-    return x_mod_p_k_plus_1
-
-
-def modular_sqrt_prime_power(n, p, k):
+def modular_sqrt(n: int, p: int) -> int:
     """
-    Hensel's Lifting Lemma for lifting solutions from modulo p to modulo p^k.
+    Compute the modular square root of n modulo a composite p.
 
     Args:
-        f: Function representing the polynomial equation f(x) ≡ 0 (mod p)
-        f_prime: Function representing the derivative of f(x)
-        x_mod_p: Initial solution modulo p
-        p: Prime number
-        k: Desired power of p
+        n (int): The number to find the square root of.
+        p (int): The composite modulus.
 
     Returns:
-        x_mod_p^k: Solution modulo p^k
+        int: The modular square root of n modulo p if it exists, otherwise None.
+
+    Raises:
+        ValueError: If n is not a quadratic residue modulo p.
     """
-    current_x_mod_p = modular_sqrt_prime(n, p)
-    current_p_power = 1
+    factors = factor(p)
+    remainders = []
+    moduli = []
 
-    for current_k in range(1, k):
-        current_x_mod_p = hensel_lift(current_x_mod_p, p, current_p_power)
-        current_p_power *= p
+    for prime, exp in factors:
+        if exp > 1:
+            raise ValueError("Modulus with prime power factors not supported.")
+        root = modular_sqrt_prime(n, prime)
+        if root is None:
+            return None
+        remainders.append(root)
+        moduli.append(prime)
 
-    return current_x_mod_p
+    return crt(remainders, moduli)
 
 
 def is_smooth(m: int, y: int) -> bool:
     """
-    Returns:
-        True if m is y-smooth, False otherwise.
+    Check if m is y-smooth, i.e., all prime factors of m are <= y.
 
     Args:
         m (int): A positive integer.
         y (int): A positive integer.
+
+    Returns:
+        bool: True if m is y-smooth, False otherwise.
     """
     if m == 1:
         return True
@@ -1029,18 +1090,19 @@ def is_smooth(m: int, y: int) -> bool:
 
 def probabilistic_dlog(x: int, g: int, p: int) -> int:
     """
-    Returns:
-        The discrete logarithm of x to the base g in (Z_p)^* using
-        a subexponential probabilistic algorithm (Baby-step Giant-step).
+    Compute the discrete logarithm of x to the base g in (Z_p)^*
+    using a subexponential probabilistic algorithm (Baby-step Giant-step).
 
     Args:
         x (int): A positive integer >= 1 and <= p-1.
-        p (int): A prime positive integer.
         g (int): A positive integer >= 1 and <= p-1.
-        Assumes g is a generator of (Z_p)^*.
+        p (int): A prime positive integer.
+
+    Returns:
+        int: The discrete logarithm of x to the base g in (Z_p)^*.
 
     Raises:
-        Exception if the discrete logarithm does not exist.
+        ValueError: If the arguments are invalid or the discrete logarithm does not exist.
     """
     if x <= 0 or x >= p or g <= 0 or g >= p or p <= 1 or not is_prime(p):
         raise ValueError("Invalid arguments. x, g should be in (1, p-1), and p should be a prime number")
@@ -1116,6 +1178,7 @@ def pollard_rho_factor(n):
             queue.extend([d, m // d])
 
     return factors
+
 
 def probabilistic_factor(n):
     """
