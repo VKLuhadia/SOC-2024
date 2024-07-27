@@ -40,6 +40,6 @@ This repository comprises of soc24mathlib.py, a python file comprising of variou
 27. modular_sqrt(x: int, n: int) -> int: Returns the modular square root of x modulo n (n >= 1). Raise an exception if the square root does not exist.
 28. is_smooth(m: int, y: int) -> bool: Return True if m is y-smooth, False otherwise.
 29. probabilistic_dlog(x: int, g: int, p: int) -> int: Returns the discrete log of x to the base g in (Z_p)^* using a subexponential probabilistic algorithm; assume p is prime, and g is a generator of (Z_p)^*. Raise and exception if the square root does not exist.
-30. probabilistic_factor(n: int) -> list[tuple[int, int]]: Returns the prime factorisation of n using a subexponential probabilistic algorithm; assume n >= 1. This should return a list of tuple, where the first component of the tuples are the prime factors, and the second component of the tuple is the respective power to which the corresponding factor is raised in the prime factorisation. The first components must appear in ascending order in the list.
-References used:
+30. probabilistic_factor(n: int) -> list[tuple[int, int]]: Returns the prime factorisation of n using a subexponential probabilistic algorithm; assume n >= 1. This should return a list of tuple, where the first component of the tuples are the prime factors, and the second component of the tuple is the respective power to which the corresponding factor is raised in the prime factorisation. The first components must appear in ascending order in the list.  
+References used: 
 A Computational Introduction to Number Theory and Algebra by Victor Shoup
