@@ -3,6 +3,8 @@ import random
 """
 This module comprises of 30 functions related to Number Theory and Algebra.
 
+Owner: Varun Luhadia
+
 Mentor: Nilabha Saha
 
 References used: "A Computational Introduction to Number Theory and Algebra" by Victor Shoup
