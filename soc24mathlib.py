@@ -394,6 +394,15 @@ def is_perfect_power(x: int) -> bool:
     """
 
     def integer_log2(x: int) -> int:
+        """
+        Compute the floor of the base-2 logarithm of a positive integer.
+
+        Args:
+            x (int): A positive integer.
+
+        Returns:
+            int: The floor of the base-2 logarithm of x.
+        """
         result = 0
         while x > 1:
             x //= 2
@@ -401,6 +410,16 @@ def is_perfect_power(x: int) -> bool:
         return result
 
     def integer_root(x: int, b: int) -> int:
+        """
+        Compute the integer b-th root of a positive integer.
+
+        Args:
+            x (int): A positive integer.
+            b (int): The root to be computed.
+
+        Returns:
+            int: The integer b-th root of x.
+        """
         low, high = 1, x
         while low < high:
             mid = (low + high + 1) // 2
@@ -435,6 +454,17 @@ def is_prime(n: int) -> bool:
     """
 
     def miller_rabin_test(d: int, n: int, a: int) -> bool:
+        """
+        Perform the Miller-Rabin primality test for a given base.
+
+        Args:
+            d (int): The odd part of n-1 such that n-1 = d * 2^r.
+            n (int): The number to be tested for primality.
+            a (int): The base for the test.
+
+        Returns:
+            bool: True if n is probably prime with base a, else False.
+        """
         x = pow(a, d, n)
         if x == 1 or x == n - 1:
             return True
