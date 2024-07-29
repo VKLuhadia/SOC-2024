@@ -107,7 +107,8 @@ Use the AKS deterministic primality testing to return true if n is prime or fals
 Returns a generator of (Z_p)^*; assume p is prime.
 
 22. discrete_log(x: int, g: int, p: int) -> int : 
-Returns the discrete logarithm of x to the base g in (Z_p)^*; assume p is prime. Raise an exception if the discrete logarithm does not exist.
+Returns the discrete logarithm of x to the base g in (Z_p)^*; assume p is prime. 
+Raise an exception if the discrete logarithm does not exist.
 
 23. legendre_symbol(a: int, p: int) -> int : 
 Returns the value of the Legendre Symbol (a | p); assume p is prime.
