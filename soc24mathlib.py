@@ -33,7 +33,7 @@ Return the modular inverse of a modulo n. For this function, raise an Exception 
 8. crt(a: list[int], n: list[int]) -> int : 
 This function applies the Chinese Remainder Theorem to find the unique value of 
 a modulo product of all n[i] such that a = a[i] (mod n[i]) 
-[Assume all the n[i] are pairwise coprime and that the length of the two lists are the same and is nonzero)
+[Assume all the n[i] are pairwise coprime and that the length of the two lists are the same and is nonzero]
 
 9. pow(a: int, m: int, n: int) -> int : 
 Returns a^m (mod n) very fast using a method called fast exponentiation
@@ -975,6 +975,32 @@ class QuotientPolynomialRing:
         )
 
 
+def log(n: int, b: int) -> int:
+    """
+    Compute the floor of the logarithm of a positive integer 'n' with base 'b'.
+
+    Args:
+        n (int): The positive integer whose logarithm is to be computed.
+        b (int): The base of the logarithm.
+
+    Returns:
+        int: The floor of the logarithm of 'n' to the base 'b'.
+
+    Raises:
+        ValueError: If 'n' is less than or equal to 0.
+    """
+    if n <= 0:
+        raise ValueError("Log of non-positive number, not possible")
+
+    c = 0
+
+    while n > 1:
+        n //= b
+        c += 1
+
+    return c
+
+
 def aks_test(n: int) -> bool:
     """
     Determine if a number is prime using the Agrawal-Kayal-Saxena (AKS) Test.
@@ -985,21 +1011,26 @@ def aks_test(n: int) -> bool:
     Returns:
         bool: True if n is a prime number, else False.
     """
-    if n <= 1:
+    if is_perfect_power(n):
         return False
 
-    if n <= 3:
-        return True
+    r = 1
 
-    if n % 2 == 0 or n % 3 == 0:
-        return False
+    while True:
+        r += 1
+        if gcd(n, r) != 1:
+            continue
+        order = 1
+        while pow(n, order, r) != 1:
+            order += 1
+        if order > floor_sqrt(r) * log(n, 2):
+            break
 
-    i = 5
-
-    while i * i <= n:
-        if n % i == 0 or n % (i + 2) == 0:
+    for a in range(1, min(n, r)):
+        if gcd(a, n) > 1:
             return False
-        i += 6
+        if pow(a, n, n) != a % n:
+            return False
 
     return True
 
