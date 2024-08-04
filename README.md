@@ -1,5 +1,4 @@
 # SOC-2024
-"""
 This module comprises of 30 functions related to Number Theory and Algebra.
 
 Owner: Varun Luhadia
@@ -138,4 +137,3 @@ This should return a list of tuple, where the first component of the tuples are 
 and the second component of the tuple is the respective power 
 to which the corresponding factor is raised in the prime factorisation. 
 The first components must appear in ascending order in the list.
-"""
